@@ -1,0 +1,5 @@
+Spear phishing targets specific individuals or employees within an organization using personalized, deceptive emails. Unlike mass phishing, these emails are crafted to seem familiar and urgent.
+
+Scenarios:
+- CEO Fraud: Attackers impersonate executives to extract financial or sensitive data from employees.
+- Whaling: High-ranking executives are targeted using tailored fraud emails that press for immediate action without verification.

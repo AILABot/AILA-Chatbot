@@ -1,0 +1,4 @@
+Voice phishing involves manipulating victims over the phone. Attackers pose as bank officials or authorities and use intimidation to extract financial details.
+
+Scenario:
+- Victims are coerced into giving away PINs, passwords, or other credentials under false pretenses of legal or financial emergencies.

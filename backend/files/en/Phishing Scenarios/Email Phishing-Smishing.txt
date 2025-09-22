@@ -1,0 +1,7 @@
+Email phishing is a type of identity theft scam conducted via email or SMS. The attacker uses social engineering tactics such as impersonating trusted entities and inducing urgency. Victims are tricked into disclosing personal information or downloading malware.
+
+Scenarios:
+- Scenario 1: Emails impersonating high-ranking executives accuse victims of crimes to coerce them into revealing information or opening malware-laden attachments.
+- Scenario 2: Emails/SMS from fake banks or authorities alert victims of data breaches, directing them to spoofed websites to input credentials.
+- Scenario 3: SMS messages deliver disguised malware apps that harvest sensitive data.
+- Scenario 4: SMS links lead to pharming sites that mimic trusted brands and steal login data through fake pop-ups.

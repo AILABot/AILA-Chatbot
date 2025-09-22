@@ -1,0 +1,8 @@
+Court (Civil/Criminal):
+Provisions:
+Time of commission of the act:
+Outcome (not guilty, guilty): ORDERS the defendant to pay the plaintiff the amount of two thousand four hundred thirty-four euros and eighty-three cents (€2,434.83) with legal interest from the service of the lawsuit.
+
+Reasoning: Law 4537/2018 introduces mandatory provisions in favor of users, as according to Article 103, payment service providers are prohibited from deviating from the provisions to the detriment of payment service users, unless the possibility of deviation is expressly provided, and they can decide to offer only more favorable terms to payment service users. Under this law and its provisions, providers are only liable when there are unusual and unforeseen circumstances beyond the control of the party invoking them, and whose consequences could not have been avoided despite efforts to the contrary. However, operational risks and security risks of the system do not constitute unusual and unforeseen circumstances, so any damage to users resulting from their occurrence falls on the providers. Furthermore, the authenticity of the disputed transaction, namely the payment act, is not proven, in the sense that none of the beneficiaries of the contested joint account, namely the plaintiff or her husband, had given their consent as stipulated in Article 64 of Law 4537/2018. Burden of proof. The payment service provider of the payer is liable to the payer for the proper execution of the payment act, unless it proves to the payer that the service provider of the beneficiary received the amount of the payment act according to paragraph 1 of Article 83 of Law 4537/2018.
+
+Facts:

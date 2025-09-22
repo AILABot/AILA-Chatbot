@@ -1,0 +1,7 @@
+Court (Civil/Criminal):  
+Provisions:  
+Time of commission of the act:  
+Outcome (not guilty, guilty):  
+Reasoning: The court found that the plaintiff bears responsibility for the loss of funds, as he demonstrated slight negligence by violating his obligations as a user of online banking services. Specifically, the court accepted the argument of contributory negligence from the user under the provision of Article 300 of the Civil Code, as proposed by the defendant banking company, thereby acknowledging the limited liability of the user.  
+Facts: The case involves a plaintiff who fell victim to online fraud, resulting in the removal of funds from his bank account. The plaintiff claimed that the bank did not take the necessary security measures to protect his account and sought compensation for the financial damage he suffered.  
+Commentary:  

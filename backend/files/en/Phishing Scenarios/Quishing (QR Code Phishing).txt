@@ -1,0 +1,4 @@
+In quishing, attackers exploit QR codes to redirect users to fraudulent sites. This is often tied to fake emails about undelivered shipments or failed payments.
+
+Scenario:
+- Victims scan a QR code believing it to be from a trusted source and are led to input their credit card and personal details on malicious websites.

@@ -1,0 +1,4 @@
+An attacker intercepts communication between a victim and a trusted entity, often using email spoofing. The goal is to eavesdrop or modify communication to trick the user into disclosing sensitive data.
+
+Scenario:
+- A spoofed email (e.g., info-bank-usa@gmail.com) is used to redirect users to fraudulent websites or request unauthorized payments.

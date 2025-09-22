@@ -1,0 +1,4 @@
+Attackers take control of a victim’s phone number by fraudulently requesting a SIM replacement from telecom providers using fake IDs.
+
+Scenario:
+- Once the new SIM is activated, attackers intercept calls and SMS (including OTPs), gaining unauthorized access to bank accounts and sensitive apps.

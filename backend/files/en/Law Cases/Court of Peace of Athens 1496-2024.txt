@@ -1,0 +1,6 @@
+Court (Civil/Criminal): Civil  
+Provisions: Directive 2015/366, Law 4537/2018  
+Time of the act: 31.08.2022  
+Outcome (not guilty, guilty): Partially accepts the claim.  
+Reasoning: The Athens Peace Court ordered the bank to return the amount that was withdrawn from the plaintiffs' account and to pay additional compensation for the moral damage they suffered.  
+Facts: The case concerns plaintiffs who fell victim to electronic fraud via phishing, resulting in the withdrawal of money from their bank account. The plaintiffs claimed that the bank did not take the necessary security measures to protect their accounts and sought compensation for the financial loss and moral damage they suffered. The court determined that the bank is responsible for the loss of the money, as it did not prove that the transactions were authorized by the plaintiffs. Furthermore, the court recognized that the bank's refusal to return the funds constitutes an infringement of the plaintiffs' personal rights, as it undermines the trust and security that the bank is required to provide to its customers.

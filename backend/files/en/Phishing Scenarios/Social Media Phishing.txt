@@ -1,0 +1,4 @@
+Attackers exploit platforms like Facebook or Instagram to impersonate friends or brands. They bait victims into clicking malicious links or giving up personal data.
+
+Scenarios:
+- Fake identities mimic users or support agents to build trust and execute data theft via messages or misleading support threads.

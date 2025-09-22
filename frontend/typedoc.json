@@ -1,0 +1,36 @@
+{
+    // "entryPoints": [
+    //     "src"
+    // ], // or use "src"
+    "entryPoints": [
+        "src/main.tsx",
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ],
+    "entryPointStrategy": "expand",
+    "tsconfig": "tsconfig.json",
+    "gitRevision": "main",
+    "disableGit": true,
+    "sourceLinkTemplate": "https://github.com/GiannisKat123/AILA-application/blob/{gitRevision}/frontend/{path}#L{line}",
+    "sourceLinkExternal": true,
+    "disableSources": false,
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ],
+    "out": "docs/api", // <-- where Sphinx will read from
+    "hideBreadcrumbs": true,
+    "readme": "none", // don't inject project README
+    "categorizeByGroup": true,
+    "excludePrivate": true,
+    "excludeProtected": false,
+    "excludeInternal": true,
+    "includeVersion": true,
+    "externalSymbolLinkMappings": {
+        "@tanstack/react-query": {
+            "QueryClientProvider": "https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider"
+        },
+        "react-router-dom": {
+            "BrowserRouter": "https://reactrouter.com/en/main/router-components/browser-router"
+        }
+    }
+}

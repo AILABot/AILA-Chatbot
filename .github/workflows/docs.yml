@@ -1,0 +1,94 @@
+name: Build & Deploy Docs (Sphinx + TypeDoc)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            frontend/package-lock.json
+            frontend/package.json
+
+      - name: Install Python doc dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx sphinx-autobuild myst-parser sphinx-rtd-theme linkify-it-py sphinx-autodoc-typehints>=2 "pydantic>=2.6,<3" "pydantic-settings>=2.2,<3" "python-jose[cryptography]>=3.3" sphinx-copybutton sphinx-autoapi sphinx-design
+
+
+      - name: Ensure Sphinx source structure exists
+        run: |
+          mkdir -p new_docs/source/backend
+          mkdir -p new_docs/source/frontend
+
+      - name: Generate backend API docs with sphinx-apidoc
+        run: |
+          sphinx-apidoc -o new_docs/source/backend/api backend || true
+
+      - name: Install frontend deps and TypeDoc
+        working-directory: frontend
+        run: |
+          npm ci || npm i
+          npm install --no-save typedoc typedoc-plugin-markdown
+
+      - name: Generate frontend TypeDoc
+        working-directory: frontend
+        run: |
+          # expects a script or config that outputs to frontend/new_docs/api
+          npm run docs:api
+
+      - name: Copy frontend API docs into Sphinx source
+        run: |
+          rm -rf new_docs/source/frontend/api
+          cp -r frontend/docs/api new_docs/source/frontend/api
+
+      - name: Build Sphinx HTML
+        working-directory: new_docs
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/backend
+        run: |
+          sphinx-build -b html source build
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: new_docs/build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
