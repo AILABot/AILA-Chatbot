@@ -93,7 +93,7 @@ def load_reranker_model(type:str):
         ft = co.finetuning.get_finetuned_model(settings.COHERE_MODEL_ID)
         return {'cohere_client':co,'fituned_model':ft}
     if type == 'cross-encoder':
-        reranker_model = CrossEncoder('backend\cached_reranker_models\IoannisKat1__bge-reranker-basefinetuned-new')
+        reranker_model = CrossEncoder('./backend/cached_reranker_models/IoannisKat1__bge-reranker-basefinetuned-new')
         return {'reranker_model':reranker_model}
 
 def initialize_indexes(top_k:int):
@@ -227,7 +227,7 @@ class LLM_Pipeline():
         Returns:
             str: Detected language as returned by the model (e.g., 'English', 'Greek').
         """
-        prompt = """Find the language used in the following query: {message}"""
+        prompt = """Find the language used in the following query: {message}. Give me only the detected language."""
         
         # Match the placeholder name with the keyword argument
         response = self.model.invoke(prompt.format(message=message))
@@ -319,7 +319,7 @@ class LLM_Pipeline():
         Returns:
             tuple[str, str]: ( "True" or "False", effective_query )
         """
-        print(conversation_history)
+        # print(conversation_history)
 
         if conversation_history:
 
@@ -367,11 +367,11 @@ class LLM_Pipeline():
 
             history = [mes['message'] for mes in conversation_history][-10:]
 
-            print(prompt.format(new_question=query,history=history,last_turns= conversation_history[-1]))
+            # print(prompt.format(new_question=query,history=history,last_turns= conversation_history[-1]))
 
             response = self.model.invoke(prompt.format(new_question=query,history=history,last_turns= conversation_history[-1]))
             response_content = str(response.content).strip()
-            print(response_content)
+            # print(response_content)
             query = response_content
 
         print(query)

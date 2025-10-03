@@ -617,26 +617,24 @@ const Chat = () => {
     };
 
     return (
-        <div className="flex h-screen bg-gray-100 text-gray-800 relative overflow-x-hidden">
+        <div className="flex flex-col md:flex-row min-h-[100dvh] md:h-screen bg-gray-100 text-gray-800 relative overflow-x-hidden">
+
+            {/* Feedback Modal (unchanged logic, just better responsive spacing) */}
             {open && (
                 <form
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto p-3 sm:p-4"
                     onSubmit={handleFeedbackSubmit}
                 >
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full space-y-6 max-h-[90vh] overflow-y-auto">
-                        {/* Title */}
-                        <h2 className="text-2xl font-bold text-gray-900">Feedback Instructions</h2>
+                    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-xl md:max-w-2xl space-y-4 sm:space-y-6 max-h-[90vh] overflow-y-auto">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Feedback Instructions</h2>
 
-                        {/* General Info */}
-                        <div className="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 space-y-2">
+                        <div className="bg-gray-100 p-3 sm:p-4 rounded-lg text-xs sm:text-sm text-gray-700 space-y-2">
                             <p>
                                 In this section, you can provide feedback on the chatbot’s responses.
                                 If you believe a response was <strong>inaccurate, incomplete, or unreliable</strong>,
                                 you may suggest what the correct answer should have been.
                             </p>
-                            <p>
-                                When submitting your feedback, please include the following:
-                            </p>
+                            <p>When submitting your feedback, please include the following:</p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>
                                     <strong>Correct Answer Document:</strong> Upload or provide a document that contains the appropriate answer.
@@ -645,12 +643,12 @@ const Chat = () => {
                                     <strong>Relevant Context:</strong> Specify the part of the document (section, paragraph, or article) that supports your correction.
                                 </li>
                                 <li>
-                                    <strong>Theme:</strong> Select the theme of your feedback. You may choose one of the following, or propose your own:
+                                    <strong>Theme:</strong> Select the theme of your feedback or propose your own:
                                     <ul className="list-disc list-inside ml-4">
-                                        <li><strong>cases</strong>: Related to Law Cases</li>
-                                        <li><strong>phishing</strong>: Related to Phishing Scenarios and General Information</li>
-                                        <li><strong>cybercrime</strong>: Related to the Greek Penal Code and Legislation</li>
-                                        <li><strong>gdpr</strong>: Related to the General Data Protection Regulation</li>
+                                        <li><strong>cases</strong>: Law Cases</li>
+                                        <li><strong>phishing</strong>: Phishing & General Info</li>
+                                        <li><strong>cybercrime</strong>: Greek Penal Code & Legislation</li>
+                                        <li><strong>gdpr</strong>: GDPR</li>
                                     </ul>
                                 </li>
                             </ul>
@@ -659,17 +657,14 @@ const Chat = () => {
                         {/* Theme Selection */}
                         <div>
                             <label className="block font-medium mb-2">Theme</label>
-                            <div className="space-y-2">
+                            <div className="space-y-2 text-sm">
                                 <div>
                                     <input
                                         type="radio"
                                         id="cases"
                                         name="theme"
                                         value="cases"
-                                        onClick={() => {
-                                            setTheme("cases");
-                                            setOtherRadio(false);
-                                        }}
+                                        onClick={() => { setTheme("cases"); setOtherRadio(false); }}
                                     />
                                     <label htmlFor="cases" className="ml-2">Cases (Law Cases)</label>
                                 </div>
@@ -679,10 +674,7 @@ const Chat = () => {
                                         id="phishing"
                                         name="theme"
                                         value="phishing"
-                                        onClick={() => {
-                                            setTheme("phishing");
-                                            setOtherRadio(false);
-                                        }}
+                                        onClick={() => { setTheme("phishing"); setOtherRadio(false); }}
                                     />
                                     <label htmlFor="phishing" className="ml-2">Phishing (Scenarios & General Info)</label>
                                 </div>
@@ -692,10 +684,7 @@ const Chat = () => {
                                         id="cybercrime"
                                         name="theme"
                                         value="cybercrime"
-                                        onClick={() => {
-                                            setTheme("cybercrime");
-                                            setOtherRadio(false);
-                                        }}
+                                        onClick={() => { setTheme("cybercrime"); setOtherRadio(false); }}
                                     />
                                     <label htmlFor="cybercrime" className="ml-2">Cybercrime (Greek Penal Code & Legislation)</label>
                                 </div>
@@ -705,27 +694,23 @@ const Chat = () => {
                                         id="gdpr"
                                         name="theme"
                                         value="gdpr"
-                                        onClick={() => {
-                                            setTheme("gdpr");
-                                            setOtherRadio(false);
-                                        }
-                                        }
+                                        onClick={() => { setTheme("gdpr"); setOtherRadio(false); }}
                                     />
                                     <label htmlFor="gdpr" className="ml-2">GDPR (Data Protection Regulation)</label>
                                 </div>
-                                <div className='flex items-center gap-2'>
+                                <div className="flex items-center gap-2">
                                     <input
-                                        type='radio'
-                                        id='custom'
-                                        name='theme'
-                                        value='custom'
+                                        type="radio"
+                                        id="custom"
+                                        name="theme"
+                                        value="custom"
                                         onChange={() => setOtherRadio(true)}
                                     />
-                                    <label htmlFor="custom" className='ml-2'>Other:</label>
+                                    <label htmlFor="custom" className="ml-2">Other:</label>
                                     <input
-                                        type='text'
-                                        placeholder='Enter your own theme'
-                                        className='flex-1 px-2 py-1 border rounded text-sm'
+                                        type="text"
+                                        placeholder="Enter your own theme"
+                                        className="flex-1 px-2 py-1 border rounded text-sm"
                                         disabled={otherRadio === false}
                                         onChange={(e) => setTheme(e.target.value)}
                                     />
@@ -759,11 +744,10 @@ const Chat = () => {
                                 required
                                 onChange={(e) => setGeneralFeedback(e.target.value)}
                                 placeholder="Specify section, paragraph, or article..."
-                                className="w-full px-3 py-2 border rounded-lg text-sm h-32 resize-y"
+                                className="w-full px-3 py-2 border rounded-lg text-sm h-28 sm:h-32 resize-y"
                             />
                         </div>
 
-                        {/* Context Input */}
                         <div>
                             <label htmlFor="context" className="block font-medium mb-2">
                                 Relevant Context
@@ -775,12 +759,12 @@ const Chat = () => {
                                 required
                                 onChange={(e) => setContext(e.target.value)}
                                 placeholder="Specify section, paragraph, or article..."
-                                className="w-full px-3 py-2 border rounded-lg text-sm h-32 resize-y"
+                                className="w-full px-3 py-2 border rounded-lg text-sm h-28 sm:h-32 resize-y"
                             />
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex justify-end space-x-3">
+                        <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
                             <button
                                 type="button"
                                 onClick={() => setFeedbackFormOpen(false)}
@@ -797,8 +781,8 @@ const Chat = () => {
                         </div>
                     </div>
                 </form>
-
             )}
+
             {/* Overlay for mobile sidebar */}
             {sidebarOpen && (
                 <div
@@ -808,30 +792,27 @@ const Chat = () => {
             )}
 
             {/* Sidebar */}
-            <aside className={`
-      fixed md:relative top-0 left-0 w-64 bg-white border-r z-20
+            <aside
+                className={`fixed md:relative top-0 left-0 w-64 md:w-72 bg-white border-r z-20
       transform transition-transform duration-200 ease-in-out
-      flex flex-col h-full md:h-screen
-      ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
-    `}>
-                <div className="p-4 flex flex-col h-full">
-                    <h2 className="font-semibold mb-2 text-center">Tools</h2>
-
-                    {/* Divider for emphasis */}
+      flex flex-col h-[100dvh] md:h-screen
+      ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+            >
+                <div className="p-3 sm:p-4 flex flex-col h-full">
+                    <h2 className="font-semibold mb-2 text-center text-sm sm:text-base">Tools</h2>
                     <hr className="my-2 border-gray-300" />
 
                     <button
                         onClick={() => createNewConversation('lawsuit')}
-                        className="w-full mb-4 p-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold rounded-lg shadow hover:from-blue-700 hover:to-blue-500 transition"
+                        className="w-full mb-3 sm:mb-4 p-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold rounded-lg shadow hover:from-blue-700 hover:to-blue-500 transition text-sm sm:text-base"
                     >
                         ⚖️ Build Lawsuit
                     </button>
 
-                    {/* Divider for emphasis */}
                     <hr className="my-2 border-gray-300" />
                     <button
                         onClick={() => createNewConversation('normal')}
-                        className="w-full mb-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="w-full mb-3 sm:mb-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm sm:text-base"
                     >
                         New Conversation
                     </button>
@@ -854,8 +835,7 @@ const Chat = () => {
                                     setEditingConvId(conv.conversation_id);
                                     setEditedTitle(conv.conversation_name);
                                 }}
-                                className={`p-2 cursor-pointer rounded ${conv.conversation_id ===
-                                    currentConversation.conversation_id
+                                className={`p-2 cursor-pointer rounded text-sm sm:text-base ${conv.conversation_id === currentConversation.conversation_id
                                     ? "bg-blue-100 font-semibold"
                                     : "hover:bg-gray-200"
                                     }`}
@@ -881,27 +861,26 @@ const Chat = () => {
 
                     <button
                         onClick={logoutButton}
-                        className="p-2 bg-red-500 text-white rounded hover:bg-red-600 mt-4"
+                        className="p-2 bg-red-500 text-white rounded hover:bg-red-600 mt-4 text-sm sm:text-base"
                     >
                         Logout
                     </button>
                 </div>
-
             </aside>
 
             {/* Main Chat Area */}
-
-            <div className="flex-1 flex flex-col z-0 items-center">
+            <div className="flex-1 flex flex-col z-0 items-center md:pl-0">
                 {/* Mobile Header */}
-                <div className="md:hidden flex justify-between items-center p-4 bg-white shadow w-full">
+                <div className="md:hidden flex justify-between items-center p-3 sm:p-4 bg-white shadow w-full sticky top-0 z-10">
                     <button onClick={() => setSidebarOpen(!sidebarOpen)}>
                         {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
-                    <h1 className="text-lg font-bold">AILA INTERFACE DEMO</h1>
+                    <h1 className="text-base sm:text-lg font-bold">AILA INTERFACE DEMO</h1>
+                    <div className="w-6" /> {/* spacer */}
                 </div>
 
                 {/* Desktop Title */}
-                <h1 className="text-xl font-bold text-center mt-4 mb-2 hidden md:block">
+                <h1 className="text-lg md:text-xl font-bold text-center mt-3 md:mt-4 mb-2 hidden md:block">
                     AILA INTERFACE DEMO
                 </h1>
 
@@ -909,177 +888,181 @@ const Chat = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="text-sm md:text-base text-gray-700 text-center mb-4"
+                    className="text-xs sm:text-sm md:text-base text-gray-700 text-center mb-3 md:mb-4 px-3"
                 >
                     Welcome, <span className="font-semibold text-blue-700">{user?.username}</span>
                 </motion.div>
 
                 {/* Chat Container */}
-
-                <div ref={chatRef} className="flex-1 w-full max-w-4xl px-6 overflow-y-auto overflow-x-hidden">
-                    <div className="bg-white rounded-lg shadow p-4 space-y-4">
-                        {currentConversation ? (
-                            <ul className="space-y-4">
-                                {messages.map((mes, index) => (
-                                    <li
-                                        key={mes.id}
-                                        className={`flex flex-col gap-1 ${mes.role === 'user' ? 'items-end' : 'items-start'}`}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <div className="mt-1">
-                                                {mes.role === 'user' ? <User size={20} /> : <Bot size={20} />}
-                                            </div>
-                                            <div className={`px-5 py-4 rounded-md shadow-sm text-sm whitespace-pre-line text-sm md:text-base lg:text-lg ${mes.role === 'user'
-                                                ? 'bg-blue-100 text-blue-800'
-                                                : 'bg-gray-200 text-gray-800'
-                                                }`}>
-                                                {/* {mes.message} */}
-                                                {mes.role === 'assistant' ? (
-                                                    (() => {
-                                                        const isLastAssistant =
-                                                            messages.length > 0 &&
-                                                            messages[messages.length - 1]?.id === mes.id &&
-                                                            mes.role === 'assistant';
-
-                                                        const hasStarted = !!mes.message;
-
-                                                        if (isStreaming && isLastAssistant && !hasStarted) {
-                                                            // **NEW**: show spinner in the last bot message BEFORE the first token arrives
-                                                            return <InlineSpinner />;
-                                                        }
-
-                                                        if (isStreaming && isLastAssistant && hasStarted) {
-                                                            // streaming started: show text + blinking cursor
-                                                            return (
-                                                                <span>
-                                                                    {mes.message}
-                                                                    <span className="inline-block align-baseline w-[0.6ch] animate-pulse">▍</span>
-                                                                </span>
-                                                            );
-                                                            // return <span>{mes.message}<span className="animate-pulse">▍</span></span>;
-                                                        }
-
-                                                        // idle / finished
-                                                        return mes.message;
-                                                    })()
-                                                ) : (
-                                                    mes.message
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Feedback aligned right */}
-                                        {mes.role === 'assistant' && user?.role === 'user' && mes.id && currentConversation?.conversation_id && (
-                                            <div className="flex justify-end w-full pr-10 mt-1">
-                                                <button
-                                                    type="button"
-                                                    disabled={mes.feedback === 'false'}
-                                                    onClick={(e) => handleUserFeedback(mes.id, currentConversation.conversation_id, 'false', e)}
-                                                    aria-pressed={mes.feedback === 'false'}
-                                                    aria-label="Mark as unhelpful"
-                                                    className={`text-xs md:text-sm lg:text-base mr-3 transition-colors ${mes.feedback === 'false'
-                                                        ? 'text-red-600 font-bold cursor-default'
-                                                        : (mes.feedback !== null)
-                                                            ? 'text-gray-600 opacity-50 hover:opacity-100 hover:text-red-500 cursor-pointer'
-                                                            : 'text-gray-600 hover:text-red-500 cursor-pointer'
+                <div
+                    ref={chatRef}
+                    className="flex-1 w-full px-3 sm:px-4 md:px-6 overflow-y-auto overflow-x-hidden"
+                >
+                    <div className="mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
+                        <div className="bg-white rounded-lg shadow p-3 sm:p-4 space-y-3 sm:space-y-4">
+                            {currentConversation ? (
+                                <ul className="space-y-3 sm:space-y-4">
+                                    {messages.map((mes, index) => (
+                                        <li
+                                            key={mes.id}
+                                            className={`flex flex-col gap-1 ${mes.role === 'user' ? 'items-end' : 'items-start'}`}
+                                        >
+                                            <div className="flex items-start sm:items-center gap-2 max-w-full">
+                                                <div className="mt-0.5 sm:mt-1 shrink-0">
+                                                    {mes.role === 'user' ? <User size={18} /> : <Bot size={18} />}
+                                                </div>
+                                                <div
+                                                    className={`px-4 py-3 rounded-md shadow-sm text-xs sm:text-sm md:text-base whitespace-pre-line break-words max-w-[85vw] sm:max-w-[70vw] md:max-w-[60vw] ${mes.role === 'user'
+                                                        ? 'bg-blue-100 text-blue-800'
+                                                        : 'bg-gray-200 text-gray-800'
                                                         }`}
-                                                    // title = {mes.feedback === false? 'Marked unhelpful' : 'Mark as unhelpful'}
-                                                    title="Thumbs down"
                                                 >
-                                                    👎
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    disabled={mes.feedback === 'true'}
-                                                    onClick={(e) => handleUserFeedback(mes.id, currentConversation.conversation_id, 'true', e)}
-                                                    aria-pressed={mes.feedback === 'true'}
-                                                    aria-label="Mark as unhelpful"
-                                                    className={`text-xs md:text-sm lg:text-base mr-3 transition-colors ${mes.feedback === 'true'
-                                                        ? 'text-red-600 font-bold cursor-default'
-                                                        : (mes.feedback !== null)
-                                                            ? 'text-gray-600 opacity-50 hover:opacity-100 hover:text-red-500 cursor-pointer'
-                                                            : 'text-gray-600 hover:text-red-500 cursor-pointer'
-                                                        }`}
-                                                    title="Thumbs up"
-                                                >
-                                                    👍
-                                                </button>
-                                            </div>
-                                        )}
-                                        {mes.role === 'assistant' && user?.role === 'lawyer' && mes.id && currentConversation?.conversation_id && (
-                                            <div className="flex justify-end w-full pr-10 mt-1">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const details = {
-                                                            message_id: mes.id,
-                                                            conversation_id: currentConversation.conversation_id,
-                                                            query_id: messages[index - 1].id,
-                                                            generated_answer_id: mes.id,
-                                                        };
-                                                        setmessageFeedbackDetails(details); // async
-                                                        setFeedbackFormOpen(true);
+                                                    {mes.role === 'assistant' ? (
+                                                        (() => {
+                                                            const isLastAssistant =
+                                                                messages.length > 0 &&
+                                                                messages[messages.length - 1]?.id === mes.id &&
+                                                                mes.role === 'assistant';
 
-                                                    }}
-                                                    className="px-3 py-1 bg-blue-600 text-white text-xs md:text-sm lg:text-base rounded-lg shadow hover:bg-blue-700 transition-colors"
-                                                >
-                                                    Feedback
-                                                </button>
-                                            </div>
-                                        )}
-                                    </li>
-                                ))}
+                                                            const hasStarted = !!mes.message;
 
-                            </ul>
-                        ) : (
-                            <div className="text-gray-500">Select or create a conversation</div>
-                        )}
+                                                            if (isStreaming && isLastAssistant && !hasStarted) {
+                                                                return <InlineSpinner />;
+                                                            }
+
+                                                            if (isStreaming && isLastAssistant && hasStarted) {
+                                                                return (
+                                                                    <span>
+                                                                        {mes.message}
+                                                                        <span className="inline-block align-baseline w-[0.6ch] animate-pulse">▍</span>
+                                                                    </span>
+                                                                );
+                                                            }
+
+                                                            return mes.message;
+                                                        })()
+                                                    ) : (
+                                                        mes.message
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Feedback row */}
+                                            {mes.role === 'assistant' && user?.role === 'user' && mes.id && currentConversation?.conversation_id && (
+                                                <div className="flex justify-end w-full pr-4 sm:pr-6 mt-1">
+                                                    <button
+                                                        type="button"
+                                                        disabled={mes.feedback === 'false'}
+                                                        onClick={(e) => handleUserFeedback(mes.id, currentConversation.conversation_id, 'false', e)}
+                                                        aria-pressed={mes.feedback === 'false'}
+                                                        aria-label="Mark as unhelpful"
+                                                        className={`text-xs sm:text-sm md:text-base mr-3 transition-colors ${mes.feedback === 'false'
+                                                            ? 'text-red-600 font-bold cursor-default'
+                                                            : (mes.feedback !== null)
+                                                                ? 'text-gray-600 opacity-50 hover:opacity-100 hover:text-red-500 cursor-pointer'
+                                                                : 'text-gray-600 hover:text-red-500 cursor-pointer'
+                                                            }`}
+                                                        title="Thumbs down"
+                                                    >
+                                                        👎
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        disabled={mes.feedback === 'true'}
+                                                        onClick={(e) => handleUserFeedback(mes.id, currentConversation.conversation_id, 'true', e)}
+                                                        aria-pressed={mes.feedback === 'true'}
+                                                        aria-label="Mark as helpful"
+                                                        className={`text-xs sm:text-sm md:text-base mr-3 transition-colors ${mes.feedback === 'true'
+                                                            ? 'text-red-600 font-bold cursor-default'
+                                                            : (mes.feedback !== null)
+                                                                ? 'text-gray-600 opacity-50 hover:opacity-100 hover:text-red-500 cursor-pointer'
+                                                                : 'text-gray-600 hover:text-red-500 cursor-pointer'
+                                                            }`}
+                                                        title="Thumbs up"
+                                                    >
+                                                        👍
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {mes.role === 'assistant' && user?.role === 'lawyer' && mes.id && currentConversation?.conversation_id && (
+                                                <div className="flex justify-end w-full pr-4 sm:pr-6 mt-1">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const details = {
+                                                                message_id: mes.id, conversation_id: currentConversation.conversation_id, query_id: messages[index - 1].id, generated_answer_id: mes.id,
+                                                            };
+                                                            setmessageFeedbackDetails(details);
+                                                            setFeedbackFormOpen(true);
+                                                        }}
+                                                        className="px-3 py-1 bg-blue-600 text-white text-xs sm:text-sm md:text-base rounded-lg shadow hover:bg-blue-700 transition-colors"
+                                                    >
+                                                        Feedback
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="text-gray-500 text-sm sm:text-base">Select or create a conversation</div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 {/* Error Message */}
-                {
-                    botResponse && (
-                        <div className="mb-2 text-red-500 px-4">{botResponse}</div>
-                    )
-                }
+                {botResponse && (
+                    <div className="mb-2 text-red-500 px-3 sm:px-4 w-full max-w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
+                        {botResponse}
+                    </div>
+                )}
 
-                {/* Input */}
-                {
-                    currentConversation && (
-                        <form onSubmit={handleSubmit} className="w-full max-w-4xl p-5 bg-white border-t">
-                            <div className="flex items-start gap-2">
-                                {/* Textarea (auto-grow, doesn't force siblings to grow) */}
+                {/* Composer (sticky on mobile) */}
+                {currentConversation && (
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-full bg-white border-t sticky bottom-0 z-10 pb-[env(safe-area-inset-bottom)]"
+                    >
+                        <div className="mx-auto max-w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl p-3 sm:p-4">
+                            {/* Stack on mobile; row on desktop */}
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch">
                                 <textarea
                                     value={userQuery}
                                     onChange={(e) => setUserQuery(e.target.value)}
-                                    onKeyDown={handleTextareaKeyDown}        // optional: Enter=send, Shift+Enter=new line
+                                    onKeyDown={handleTextareaKeyDown}
                                     onInput={(e) => {
                                         const el = e.currentTarget;
-                                        el.style.height = '0px';               // reset
-                                        el.style.height = el.scrollHeight + 'px'; // grow to content
+                                        el.style.height = '0px';
+                                        el.style.height = el.scrollHeight + 'px';
                                     }}
                                     rows={1}
                                     placeholder="Type your message here..."
                                     required
-                                    className="flex-1 min-w-0 border border-gray-300 rounded-md p-4 text-sm md:text-base lg:text-lg
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none leading-6
-                 max-h-48 overflow-y-auto break-words"
+                                    className="flex-1 min-w-0 border border-gray-300 rounded-md p-3 sm:p-4 text-sm sm:text-base
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none leading-6
+                   max-h-40 sm:max-h-48 overflow-y-auto break-words"
                                 />
 
-                                {/* Right-side buttons: fixed height, don't stretch */}
-                                <div className="flex shrink-0 self-start gap-2 md:flex-col">
+                                {/* Buttons: full-width stacked on mobile; inline on desktop, no wrap */}
+                                <div className="w-full sm:w-auto flex flex-col md:flex-row flex-nowrap gap-2 sm:gap-3 sm:self-end">
                                     <button
                                         type="submit"
-                                        className="h-12 px-6 bg-blue-600 text-white font-semibold text-sm md:text-base lg:text-lg
-                   rounded-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className={`w-full md:w-auto h-12 px-5 rounded-xl font-semibold text-sm sm:text-base shadow-sm
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+            active:translate-y-px touch-manipulation transition border shrink-0
+            ${isStreaming
+                                                ? 'bg-blue-300 text-white cursor-not-allowed border-blue-300'
+                                                : 'bg-blue-600 text-white hover:bg-blue-700 border-blue-600'}`}
                                     >
-                                        Submit
+                                        {isStreaming ? 'Sending…' : 'Submit'}
                                     </button>
-                                    {currentConversation.conversation_type == 'lawsuit' && (
-                                        <div>
+
+                                    {currentConversation.conversation_type === 'lawsuit' && (
+                                        <div className="flex flex-col gap-2 w-full md:w-auto shrink-0">
                                             <input
-                                                type='file'
+                                                type="file"
                                                 ref={inputRef}
                                                 multiple
                                                 accept="image/*,audio/mpeg,audio/wav,application/pdf,.txt,.csv"
@@ -1089,13 +1072,18 @@ const Chat = () => {
                                             <button
                                                 type="button"
                                                 onClick={openFileDialog}
-                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                className="w-full md:w-auto h-12 px-5 rounded-xl font-semibold text-sm sm:text-base shadow-sm
+                         focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+                         active:translate-y-px touch-manipulation transition border
+                         bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+                                            >
                                                 Upload Files
                                             </button>
+
                                             {!!uploadedFiles?.length && (
-                                                <ul className="max-h-32 overflow-auto text-xs border rounded-md p-2 space-y-1">
+                                                <ul className="max-h-24 sm:max-h-32 overflow-auto text-xs border rounded-md p-2 space-y-1 w-full md:w-64">
                                                     {uploadedFiles.map((f, i) => (
-                                                        <li key={i} className='flex items-center justify-between gap-2'>
+                                                        <li key={i} className="flex items-center justify-between gap-2">
                                                             <span className="truncate">{f.name}</span>
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-gray-500">
@@ -1103,7 +1091,9 @@ const Chat = () => {
                                                                 </span>
                                                                 <button
                                                                     type="button"
-                                                                    onClick={() => setUploadedFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                                                                    onClick={() =>
+                                                                        setUploadedFiles((prev) => prev.filter((_, idx) => idx !== i))
+                                                                    }
                                                                     className="px-2 py-1 border text-xs rounded hover:bg-gray-50"
                                                                 >
                                                                     remove
@@ -1115,35 +1105,30 @@ const Chat = () => {
                                             )}
                                         </div>
                                     )}
-                                    {currentConversation.conversation_type == 'normal' && (<button
-                                        type="button"
-                                        onClick={() => setOnlineMode(!isOnline)}
-                                        aria-pressed={isOnline}
-                                        className={`h-12 px-6 font-semibold text-sm md:text-base lg:text-lg rounded-md transition
-                    focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 whitespace-nowrap
-                    ${isOnline ? 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                                                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-                                    >
-                                        {isOnline ? 'RAG Mode' : 'Online Mode'}
-                                    </button>)}
-                                    {/* <button
-                                        type="button"
-                                        onClick={() => setOnlineMode(!isOnline)}
-                                        aria-pressed={isOnline}
-                                        className={`h-12 px-6 font-semibold text-sm md:text-base lg:text-lg rounded-md transition
-                    focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 whitespace-nowrap
-                    ${isOnline ? 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                                                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-                                    >
-                                        {isOnline ? 'RAG Mode' : 'Online Mode'}
-                                    </button> */}
+
+                                    {currentConversation.conversation_type === 'normal' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setOnlineMode(!isOnline)}
+                                            aria-pressed={isOnline}
+                                            className={`w-full md:w-auto h-12 px-5 rounded-xl font-semibold text-sm sm:text-base shadow-sm
+                        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+                        active:translate-y-px touch-manipulation transition border shrink-0
+                        ${isOnline
+                                                    ? 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
+                                                    : 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'}`}
+                                        >
+                                            {isOnline ? 'RAG Mode' : 'Online Mode'}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                        </form>
-                    )
-                }
-            </div >
-        </div >
+                        </div>
+                    </form>
+
+                )}
+            </div>
+        </div>
     );
 
 

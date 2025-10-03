@@ -56,6 +56,7 @@ async def login(data:UserCredentials, response:Response):
         200: {'user_details': {...}}
         401: HTTPException with error detail
     """
+    print(data)
     auth = login_user(username=data.username, password=data.password)
     print(auth)
     if auth['authenticated']:
@@ -349,7 +350,7 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
         StreamingResponse with "data: {json}\n\n" chunks.
     """
     print(request_data.keys())
-    model = ChatOpenAI(model=settings.OPEN_AI_MODEL,api_key=settings.API_KEY, temperature=0.7,)
+    model = ChatOpenAI(model=settings.OPEN_AI_MODEL,api_key=settings.API_KEY, temperature=0.7)
 
     if request_data['conversation_type'] == 'lawsuit':
         path = 'backend/api/docs_for_lawsuits'
@@ -362,7 +363,7 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
 
         if request_data['conversation_id'] not in request.app.state.user_data_dict.keys(): request.app.state.user_data_dict[request_data['conversation_id']] = {}
 
-        prompt = """Find the language used in the following query: {message}"""
+        prompt = """Find the language used in the following query: {message}. Give me only the detected language."""
         
         response = model.invoke(prompt.format(message=request_data['message']))
         
@@ -383,22 +384,67 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
         messages = build_messages(prompt,file_list)
         files_description = model.invoke(messages)
 
-
         prompt_1 = """You are a meticulous legal intake assistant for Greek criminal complaints about phishing/cyber fraud.
+                GOAL
+                - Parse inputs into a strict JSON schema.
+                - If ANY required field is missing/unclear, DO NOT draft. Ask targeted questions in Greek.
+                - Always populate events_description if any narrative exists.
 
-                TASK:
-                1) Parse the available inputs and determine if the data are sufficient to draft a complete, formally styled Greek criminal complaint (Μήνυση).
-                2) If ANY “DATA NEEDED” item is missing or unclear, DO NOT draft the complaint. Instead, produce precise, targeted follow-up questions in Greek.
-                3) If everything is sufficient, signal readiness.
+                ROBUST EXTRACTION RULES
+                1) SECTION MARKERS (normalize the user input first):
+                - Treat patterns like "1. ...", "2. ...", "3. ..." as separate sections.
+                - Map common enumerations:
+                    • "1." → complainant candidate
+                    • "2." → accused candidate
+                    • "3." → narrative/events candidate
+                2) COMPLAINANT DETECTION
+                - If the first section looks like a Greek full name or name with initial (e.g., "Ιωάννης Δ."), set parsed_data.complainant[0].name to that string.
+                - If narrative uses first person ("δέχθηκα", "μου τηλεφώνησε"), treat the narrator as the complainant even if other fields are missing.
+                - If phone/email/address are not explicitly present, leave null and list them in missing_or_unclear.
+                3) ACCUSED DETECTION
+                - If second section is "Άγνωστος δράστης" or similar, set accused[0].name="Άγνωστος δράστης".
+                - If names, company, phones, IBANs are present, include in accused[0].details.
+                4) EVENTS EXTRACTION (must not be empty if any narrative text exists)
+                - Split narrative by: sentence boundaries, explicit dates/times, or action changes ("κάλεσε", "μου είπε", "έπεισαν", "εγγράφηκα/κατέβαλα", "υποσχέθηκαν").
+                - For each event, build a concise Greek sentence (≤240 chars) that includes WHO (if known), WHAT, HOW (phone/platform), WHEN (DD/MM/YYYY if present), and AMOUNTS (format 1.234,56 € or append ,00).
+                - Always include phone numbers and platform names mentioned in the event text.
+                5) TIMELINE
+                - For each dated event, create {{"date":"DD/MM/YYYY","time":"HH:MM"|null,"event":"..."}}.
+                - If time unknown, use null.
+                6) TRANSACTIONS
+                - For each payment/transfer mentioned, add an entry with amount (European format), date if known, method ("κάρτα/έμβασμα/εγγραφή"), IBAN/reference if present; else null.
+                7) EVIDENCE
+                - Extract only items explicitly provided (phones, URLs, emails, screenshots, IDs). Do not fabricate.
+                8) PROSECUTOR & PLACE
+                - If not provided, leave nulls and add targeted questions.
+                9) LANGUAGE & FORMATS
+                - Dates: DD/MM/YYYY. Amounts: 1.234,56 € (append ,00 if decimals unknown).
+                - All questions/answers in {language}.
 
-                DATA NEEDED (all in Greek where applicable):
+                DATA NEEDED (but not all necessary)
                 1. Στοιχεία Μηνυτή: Ονοματεπώνυμο, Διεύθυνση, Τηλέφωνο, Email.
                 2. Στοιχεία Κατηγορουμένου (αν υπάρχουν): Ονοματεπώνυμο/Επωνυμία, στοιχεία επικοινωνίας, IBAN κ.λπ.
                 3. Αναλυτική περιγραφή περιστατικών: τρόπος phishing, πλατφόρμα, ποσά.
                 4. Χρονολόγιο: ημερομηνίες/ώρες με σειρά.
                 5. Συναλλαγές: ακριβείς ημερομηνίες, ποσά, μέθοδος/IBAN, αναφορές.
-                6. Αποδεικτικά: screenshots, αποδείξεις, μηνύματα, URLs, emails, τηλέφωνα. Do not fabricate them, only based on what the user sends you
-                7. Τόπος & Εισαγγελέας: πόλη κατάθεσης (π.χ. «ΠΡΟΣ: Τον/Την Εισαγγελέα Πρωτοδικών Αθηνών»), τόπος/ημερομηνία τέλεσης.
+                6. Αποδεικτικά: screenshots, αποδείξεις, μηνύματα, URLs, emails, τηλέφωνα.
+                7. Τόπος & Εισαγγελέας: πόλη κατάθεσης, τόπος/ημερομηνία τέλεσης.
+
+                NO_MORE_INFO TRIGGERS (handle before any other rule)
+                - If the latest user message clearly states they cannot or do not wish to provide additional details, set:
+                "status"="READY", "questions_el"=[], "missing_or_unclear"=[]
+                - Treat the following (case-insensitive, accent-insensitive, minor typos allowed) as NO_MORE_INFO:
+                "δυστυχώς δεν έχω άλλα στοιχεία",
+                "δεν έχω άλλα στοιχεία",
+                "δεν εχω αλλα στοιχεια",
+                "δεν γνωρίζω περισσότερα",
+                "δεν γνωριζω περισσοτερα",
+                "δεν έχω περισσότερα",
+                "δεν εχω περισσοτερα",
+                "δεν μπορώ να δώσω άλλα",
+                "αυτά είναι όλα",
+                "ως εδώ", "δεν θυμάμαι κάτι άλλο"
+                - When this rule fires, DO NOT add follow-up questions, even if fields are missing.
 
                 CONSTRAINTS:
                 - Μην εφευρίσκεις στοιχεία. Αν λείπουν, ρώτα στοχευμένα.
@@ -412,7 +458,6 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
                 - Language for final drafting: {language}
                 - Uploaded files metadata. These are evidence (if any): {evidence_lines}
                 - previous state: {state}
-
 
                 OUTPUT FORMAT (JSON only):
                 {{
@@ -429,20 +474,76 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
                     "events_description": ["..."],
                     "timeline": [{{"date":"DD/MM/YYYY","time":"HH:MM","event":"..."}}],
                     "transactions": [{{"date":"DD/MM/YYYY","amount":"1.234,56 €","method":"...","iban":"...","reference":"..."}}],
-                    "evidence": [{evidence_lines}],
+                    "evidence": [{{evidence_lines}}],
                     "prosecutor_place": [{{"to":"ΠΡΟΣ: Τον/Την Εισαγγελέα Πρωτοδικών ...","place":"...","date":"DD/MM/YYYY"}}]
                 }}
                 }}
 
                 DECISION LOGIC:
+                - If NO_MORE_INFO TRIGGERS ⇒ status="READY"
                 - If any DATA NEEDED item is missing/unclear ⇒ status="NEED_MORE_INFO" and provide concise, targeted questions in Greek.
                 - Else ⇒ status="READY".
+
+                ADDITIONAL INSTRUCTIONS:
+                - When constructing `events_description`, make a short description of the events that the user sents you.
+                - Always include phone numbers exactly as sent, preserving + country codes.
+                - If amounts exist but no decimal info, append `,00` (e.g., `250,00 €`).
+                - If the user tells you that they do not have other clues make the status READY 
             """.format(documents = texts, conversation_history = request_data['conversation_history'], query = request_data['message'], language = language, state=request.app.state.user_data_dict[request_data['conversation_id']], evidence_lines = files_description.content)
         
-        messages = build_messages(prompt_1,file_list)
+        # your existing f-string prompt_1 above...
+
+        few_shot = r'''
+        FEW-SHOT (guide only — do not echo at runtime)
+        USER_INPUT:
+        "1. Ιωάννης Δ., 2. Άγνωστος δράστης, 3. Στις 18 Ιουνίου 2024 δέχθηκα τηλεφώνημα από τον αριθμό 6971690327 από άτομο 'Δημοσθένης' σχετικό με εταιρία ANYDESK. Μου τηλεφώνησε και 'Μάρθα' από +4474757655399. Με έπεισαν να εγγραφώ έναντι 250 ευρώ, υποσχόμενοι κέρδη έως 100.000 ευρώ και μείωση δόσεων στεγαστικού."
+
+        ASSISTANT_OUTPUT:
+        {
+        "status": "NEED_MORE_INFO",
+        "missing_or_unclear": [
+            "Στοιχεία Μηνυτή: Διεύθυνση, Τηλέφωνο ή Email",
+            "Τόπος & Εισαγγελέας",
+            "Λεπτομέρειες συναλλαγής (ημερομηνία/τρόπος)"
+        ],
+        "questions_el": [
+            "Παρακαλώ δώστε πλήρη διεύθυνση, τηλέφωνο και email επικοινωνίας.",
+            "Σε ποια πόλη επιθυμείτε να κατατεθεί η μήνυση;",
+            "Πότε και με ποιον τρόπο καταβλήθηκε το ποσό των 250,00 €;"
+        ],
+        "parsed_data": {
+            "complainant": [{"name":"Ιωάννης Δ.","address":null,"phone":null,"email":null}],
+            "accused": [{"name":"Άγνωστος δράστης","details":null}],
+            "lawyer": [{}],
+            "events_description": [
+            "Στις 18/06/2024 δέχθηκα κλήση από τον αριθμό 6971690327 από άτομο που συστήθηκε ως «Δημοσθένης», σχετικό με την εταιρία ANYDESK.",
+            "Αργότερα επικοινώνησε η «Μάρθα» από τον αριθμό +4474757655399 και με παρότρυνε σε εγγραφή.",
+            "Με έπεισαν να εγγραφώ στην ANYDESK έναντι 250,00 €, υποσχόμενοι κέρδη έως 100.000 € και μείωση δόσεων στεγαστικού."
+            ],
+            "timeline": [
+            {"date":"18/06/2024","time":null,"event":"Κλήση από «Δημοσθένης» (6971690327) για ANYDESK"},
+            {"date":"18/06/2024","time":null,"event":"Κλήση από «Μάρθα» (+4474757655399)"},
+            {"date":null,"time":null,"event":"Εγγραφή και καταβολή 250,00 €"}
+            ],
+            "transactions": [
+            {"date":null,"amount":"250,00 €","method":"εγγραφή/πληρωμή","iban":null,"reference":null}
+            ],
+            "evidence": [
+            {"type":"phone_number","value":"6971690327"},
+            {"type":"phone_number","value":"+4474757655399"},
+            {"type":"company","value":"ANYDESK"}
+            ],
+            "prosecutor_place": [{"to":null,"place":null,"date":null}]
+        }
+        }
+        '''
+
+        prompt_full = prompt_1 + "\n\n" + few_shot
+
+        messages = build_messages(prompt_full,file_list)
         json_model = model.bind(response_format={"type": "json_object"})
         response = json_model.invoke(messages)
-        resp_dict = ast.literal_eval(response.content)
+        resp_dict = json.loads(response.content)
         
         if request.app.state.user_data_dict[request_data['conversation_id']] == {}: request.app.state.user_data_dict[request_data['conversation_id']] = resp_dict
         else:
@@ -450,20 +551,22 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
                 if key != 'parsed_data': request.app.state.user_data_dict[request_data['conversation_id']][key] = resp_dict[key]
             for key in resp_dict['parsed_data']: request.app.state.user_data_dict[request_data['conversation_id']]['parsed_data'][key] = resp_dict['parsed_data'][key]
 
+        print(request.app.state.user_data_dict[request_data['conversation_id']]['status'])
+
         if request.app.state.user_data_dict[request_data['conversation_id']]['status'] == 'READY':
             os.environ.pop("AWS_PROFILE", None)
             os.environ.pop("AWS_DEFAULT_PROFILE", None)
-            f = open("conversations.txt", "rb")  # keep it open until you're done
-            uf = UploadFile(
-                file=f,
-                filename="conversations.txt",
-                headers=Headers({
-                    "content-disposition": 'form-data; name="files"; filename="conversations.txt"',
-                    "content-type": "text/plain",
-                })
-            )
+            # f = open("conversations.txt", "rb")  # keep it open until you're done
+            # uf = UploadFile(
+            #     file=f,
+            #     filename="conversations.txt",
+            #     headers=Headers({
+            #         "content-disposition": 'form-data; name="files"; filename="conversations.txt"',
+            #         "content-type": "text/plain",
+            #     })
+            # )
 
-            files = [uf]
+            # files = [uf]
             path = 'backend/api/docs_for_lawsuits'
             docs = os.listdir(path)
             texts = []
@@ -600,6 +703,11 @@ async def chat_endpoint(request_data: Message = Depends(parse_message_form),file
             - Keep the most relevant information that can help you answer the user query. Keep also related metadata in your response.
 
             If you have metadata related to the context, include it in your response as well.
+
+            NOTES:
+            - When translating the following terms in Greek make sure the follow the following format:
+                -) Greek Cybercrime Legislation -> Ελληνικός Ποινικός Κώδικας
+                -) GDPR or General Data Protection Regulation -> Γενικός Κανονισμός Προστασίας Δεδομένων
 
             Generate your answer below in {language}:
         """

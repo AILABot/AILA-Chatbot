@@ -2,9 +2,5 @@ fly.toml
 .env
 nginx
 test.py
-.pyc
 conversations.txt
-backend/cached_embedding_models
-backend/cached_reranker_models
-frontend/node_modules
-backend/__pycache__
+*.pyc
