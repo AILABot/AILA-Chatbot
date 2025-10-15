@@ -36,7 +36,6 @@ It is recommended to install the application in a dedicated **[Python virtual en
 ```bash
 # Clone the repository
 git clone https://github.com/GiannisKat123/AILA-application
-python backend/.py
 
 cd AILA-application
 
