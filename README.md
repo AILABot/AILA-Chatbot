@@ -30,7 +30,7 @@ The documentation provided in this repository guides users through:
 
 ## Installation
 The software requires **Python 3.11 or higher**.  
-It is recommended to install the application in a dedicated [Python virtual environment]([https://example.com](https://docs.python.org/3/library/venv.html). In addition, **[Docker](https://www.docker.com/)** must be installed on the system.  
+It is recommended to install the application in a dedicated **[Python virtual environment](https://docs.python.org/3/library/venv.html)**. In addition, **[Docker](https://www.docker.com/)** must be installed on the system.  
 
 ### Steps for installation from source
 ```bash
