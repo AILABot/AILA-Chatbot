@@ -42,11 +42,6 @@ cd AILA-Chatbot
 ```
 Make sure you have also the suitable environment variables. You can find those in the settings file [here](https://github.com/AILABot/AILA-Chatbot/blob/main/backend/database/config/config.py)
 
-```bash
-# Cache embedding and reranker models
-python backend/cache_models.py
-```
-
 Suppose we want to run the software locally in the port 8080. You have to change base url in the frontend/api/axios.tsx to **'http://localhost:8080'**. This is were the backend listens as defined in the files.
 
 Then you can do two things:
