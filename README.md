@@ -35,12 +35,12 @@ It is recommended to install the application in a dedicated **[Python virtual en
 ### Steps for installation from source
 ```bash
 # Clone the repository
-git clone https://github.com/GiannisKat123/AILA-application
+git clone https://github.com/AILABot/AILA-Chatbot
 
-cd AILA-application
+cd AILA-Chatbot
 
 ```
-Make sure you have also the suitable environment variables. You can find those in the settings file [here](https://github.com/GiannisKat123/AILA-application/blob/main/backend/database/config/config.py)
+Make sure you have also the suitable environment variables. You can find those in the settings file [here](https://github.com/AILABot/AILA-Chatbot/blob/main/backend/database/config/config.py)
 
 ```bash
 # Cache embedding and reranker models
@@ -100,7 +100,7 @@ With two lines using the Dockerfile provided in repository by running
 In this case make sure that the Frontend and Backend URLs are the same in the environmental variables file. For example: **'http://localhost:8080'**
 
 ## Usage
-For more information about the functionalities of the software in the backend and frontend components, you can visit the docs [here](https://gianniskat123.github.io/AILA-application/)
+For more information about the functionalities of the software in the backend and frontend components, you can visit the docs [here](https://gianniskat123.github.io/AILA-Chatbot/)
 
 ## Acknowledgements
 AILA stands for "Artificial Intelligence-driven Framework and Legal Advice Tools for Phishing Prevention and Mitigation in Information Systems", which is a research project financially supported by the Hellenic Foundation for Research and Innovation (H.F.R.I).
